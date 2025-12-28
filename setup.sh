@@ -107,6 +107,7 @@ create_symlink "$DOTFILES_DIR/rofi/onedark.rasi" ~/.config/rofi/onedark.rasi
 
 # Zsh
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" ~/.zshrc
+create_symlink "$DOTFILES_DIR/zsh/.p10k.zsh" ~/.p10k.zsh
 
 # Setup keyd
 info "Setting up keyd..."
