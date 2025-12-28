@@ -82,3 +82,7 @@ palette = 12=#61afef
 palette = 13=#c678dd
 palette = 14=#56b6c2
 palette = 15=#ffffff
+
+# Keybindings
+keybind = ctrl+c=copy_to_clipboard
+keybind = ctrl+v=paste_from_clipboard
