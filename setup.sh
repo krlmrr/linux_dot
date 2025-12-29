@@ -112,10 +112,11 @@ create_symlink "$DOTFILES_DIR/zsh/.p10k.zsh" ~/.p10k.zsh
 # Setup keyd
 info "Setting up keyd..."
 sudo mkdir -p /etc/keyd
-echo -e "[ids]\n*\n\n[main]\ncapslock = overload(control, esc)" | sudo tee /etc/keyd/default.conf > /dev/null
+sudo rm -f /etc/keyd/default.conf
+sudo ln -s "$DOTFILES_DIR/keyd/default.conf" /etc/keyd/default.conf
 sudo systemctl enable keyd
 sudo systemctl restart keyd
-info "Keyd configured (Capslock = Ctrl/Esc)"
+info "Keyd configured (symlinked from dotfiles)"
 
 # Setup Docker
 info "Setting up Docker..."
