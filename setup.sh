@@ -154,11 +154,11 @@ info "Setting up SDDM..."
 sudo mkdir -p /etc/sddm.conf.d
 sudo rm -f /etc/sddm.conf.d/theme.conf
 sudo ln -sf "$DOTFILES_DIR/sddm/sddm.conf" /etc/sddm.conf.d/theme.conf
-# Symlink OneDark theme config and wallpaper to astronaut theme
-sudo rm -f /usr/share/sddm/themes/sddm-astronaut-theme/Themes/onedark.conf
-sudo rm -f /usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/onedark.jpg
-sudo ln -sf "$DOTFILES_DIR/sddm/theme.conf" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/onedark.conf
-sudo ln -sf "$DOTFILES_DIR/wallpapers/peakpx.jpg" /usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/onedark.jpg
+# Copy OneDark theme config and wallpaper to astronaut theme (can't symlink - SDDM can't read home dir)
+sudo cp "$DOTFILES_DIR/sddm/theme.conf" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/onedark.conf
+sudo cp "$DOTFILES_DIR/wallpapers/peakpx.jpg" /usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/onedark.jpg
+sudo chmod 644 /usr/share/sddm/themes/sddm-astronaut-theme/Themes/onedark.conf
+sudo chmod 644 /usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/onedark.jpg
 # Update metadata to use OneDark config
 sudo sed -i 's|ConfigFile=Themes/.*\.conf|ConfigFile=Themes/onedark.conf|' /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
 # Disable other display managers

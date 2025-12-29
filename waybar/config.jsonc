@@ -28,8 +28,10 @@
     "hyprland/workspaces": {
         "on-click": "activate",
         "format": "{name}",
+        "all-outputs": false,
         "persistent-workspaces": {
-            "*": 5
+            "DP-1": [1, 2, 3, 4, 5],
+            "eDP-1": [6, 7, 8, 9, 10]
         }
     },
 
