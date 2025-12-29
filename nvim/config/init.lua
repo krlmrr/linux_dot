@@ -100,9 +100,42 @@ vim.g.have_nerd_font = true
 
 -- Make line numbers default
 vim.o.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.numberwidth = 2
+-- Relative line numbers for easier jumping (current line shows absolute number)
+vim.o.relativenumber = true
+-- Align all line numbers consistently
+vim.o.statuscolumn = '%=%{v:relnum?v:relnum:v:lnum} '
+
+-- Global statusline (spans full width)
+vim.o.laststatus = 3
+
+-- Hide command line (using noice instead)
+vim.o.cmdheight = 0
+
+-- Enable inlay hints (parameter hints like PHPStorm)
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and client.server_capabilities.inlayHintProvider then
+      vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+    end
+  end,
+})
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    vim.defer_fn(function()
+      vim.o.cmdheight = 0
+    end, 100)
+  end,
+})
+
+-- Map gcc in visual mode to comment
+vim.keymap.set('x', 'gcc', 'gc', { remap = true, desc = 'Comment selection' })
+
+-- Ctrl+/ to toggle comment (like modern editors)
+vim.keymap.set('n', '<C-/>', 'gcc', { remap = true, desc = 'Toggle comment' })
+vim.keymap.set('v', '<C-/>', 'gc', { remap = true, desc = 'Toggle comment' })
+vim.keymap.set('i', '<C-/>', '<Esc>gcca', { remap = true, desc = 'Toggle comment' })
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -128,8 +161,8 @@ vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
--- Keep signcolumn on by default
-vim.o.signcolumn = 'yes'
+-- Disable signcolumn (removes left padding)
+vim.o.signcolumn = 'no'
 
 -- Decrease update time
 vim.o.updatetime = 250
@@ -156,7 +189,65 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.o.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.o.cursorline = true
+vim.o.cursorline = false
+
+-- Custom highlight overrides - set after colorscheme loads
+vim.api.nvim_create_autocmd('ColorScheme', {
+  callback = function()
+    vim.api.nvim_set_hl(0, 'Comment', { fg = '#61afef', italic = true })
+    vim.api.nvim_set_hl(0, 'NeoTreeNormal', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'NeoTreeNormalNC', { bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'NeoTreeEndOfBuffer', { bg = 'NONE' })
+    -- Telescope: replace cyan with blue
+    vim.api.nvim_set_hl(0, 'TelescopeBorder', { fg = '#61afef' })
+    vim.api.nvim_set_hl(0, 'TelescopePromptBorder', { fg = '#61afef' })
+    vim.api.nvim_set_hl(0, 'TelescopeResultsBorder', { fg = '#61afef' })
+    vim.api.nvim_set_hl(0, 'TelescopePreviewBorder', { fg = '#61afef' })
+    vim.api.nvim_set_hl(0, 'TelescopeSelectionCaret', { fg = '#61afef' })
+    vim.api.nvim_set_hl(0, 'TelescopeMatching', { fg = '#61afef' })
+    -- Mini statusline mode colors
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormal', { fg = '#282c34', bg = '#98c379', bold = true })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsert', { fg = '#282c34', bg = '#61afef', bold = true })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisual', { fg = '#282c34', bg = '#c678dd', bold = true })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplace', { fg = '#282c34', bg = '#e06c75', bold = true })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeCommand', { fg = '#282c34', bg = '#e5c07b', bold = true })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeOther', { fg = '#282c34', bg = '#abb2bf', bold = true })
+    -- Rounded separator highlights (mode color as fg, statusline bg as bg)
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormalPre', { fg = '#98c379', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeNormalSep', { fg = '#98c379', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsertPre', { fg = '#61afef', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeInsertSep', { fg = '#61afef', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisualPre', { fg = '#c678dd', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeVisualSep', { fg = '#c678dd', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplacePre', { fg = '#e06c75', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeReplaceSep', { fg = '#e06c75', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeCommandPre', { fg = '#e5c07b', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeCommandSep', { fg = '#e5c07b', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeOtherPre', { fg = '#abb2bf', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'MiniStatuslineModeOtherSep', { fg = '#abb2bf', bg = '#282c34' })
+    -- Floating windows (Lazy, noice, etc) - match main background
+    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#282c34', fg = '#abb2bf' })
+    vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#282c34', fg = '#61afef' })
+    vim.api.nvim_set_hl(0, 'LazyNormal', { bg = '#282c34', fg = '#abb2bf' })
+    vim.api.nvim_set_hl(0, 'LazyH1', { bg = '#282c34', fg = '#61afef', bold = true })
+    vim.api.nvim_set_hl(0, 'LazyH2', { bg = '#282c34', fg = '#98c379', bold = true })
+    vim.api.nvim_set_hl(0, 'LazyBackdrop', { bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'LazyFloat', { bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'FloatTitle', { bg = '#282c34', fg = '#61afef' })
+    vim.api.nvim_set_hl(0, 'LazyButton', { bg = '#282c34', fg = '#abb2bf' })
+    vim.api.nvim_set_hl(0, 'LazyButtonActive', { bg = '#282c34', fg = '#61afef' })
+    vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#2c323c' })
+    vim.api.nvim_set_hl(0, 'WinSeparator', { bg = '#282c34', fg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'WinBar', { bg = '#282c34', fg = '#abb2bf' })
+    vim.api.nvim_set_hl(0, 'WinBarNC', { bg = '#282c34', fg = '#5c6370' })
+    vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'StatusLine', { bg = '#282c34', fg = '#abb2bf' })
+    vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = '#282c34', fg = '#5c6370' })
+    vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#e5c07b', bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'SignColumn', { bg = '#282c34' })
+    vim.api.nvim_set_hl(0, 'FoldColumn', { bg = '#282c34' })
+  end,
+})
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
@@ -234,6 +325,17 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
+-- Set OneDark colors before Lazy loads so its UI uses the theme
+vim.api.nvim_set_hl(0, 'LazyNormal', { bg = '#282c34', fg = '#abb2bf' })
+vim.api.nvim_set_hl(0, 'LazyButton', { bg = '#3e4451', fg = '#abb2bf' })
+vim.api.nvim_set_hl(0, 'LazyButtonActive', { bg = '#61afef', fg = '#282c34' })
+vim.api.nvim_set_hl(0, 'LazyH1', { bg = '#61afef', fg = '#282c34', bold = true })
+vim.api.nvim_set_hl(0, 'LazySpecial', { fg = '#61afef' })
+vim.api.nvim_set_hl(0, 'LazyProgressDone', { fg = '#98c379' })
+vim.api.nvim_set_hl(0, 'LazyProgressTodo', { fg = '#3e4451' })
+vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#282c34', fg = '#abb2bf' })
+vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#282c34', fg = '#61afef' })
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -304,7 +406,7 @@ require('lazy').setup({
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.o.timeoutlen
-      delay = 0,
+      delay = 500,
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
@@ -429,6 +531,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sa', function()
+        builtin.find_files { hidden = true, no_ignore = true }
+      end, { desc = '[S]earch [A]ll files (including hidden)' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -946,7 +1051,25 @@ require('lazy').setup({
       --  and try some other statusline plugin
       local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      statusline.setup {
+        use_icons = vim.g.have_nerd_font,
+        content = {
+          active = function()
+            local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
+            local location = '%2l:%-2v'
+            return MiniStatusline.combine_groups({
+              { hl = mode_hl .. 'Pre', strings = { '' } }, -- Rounded left
+              { hl = mode_hl, strings = { ' ' .. mode .. ' ' } },
+              { hl = mode_hl .. 'Sep', strings = { '' } }, -- Rounded right
+              '%=', -- Right align
+              { hl = 'StatusLine', strings = { location .. ' ' } },
+            })
+          end,
+          inactive = function()
+            return '%#StatusLineNC#%='
+          end,
+        },
+      }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
@@ -956,6 +1079,75 @@ require('lazy').setup({
         return '%2l:%-2v'
       end
 
+      -- Show full mode name with colors
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_mode = function()
+        local mode_map = {
+          ['n'] = { name = 'NORMAL', hl = 'MiniStatuslineModeNormal' },
+          ['no'] = { name = 'O-PENDING', hl = 'MiniStatuslineModeNormal' },
+          ['nov'] = { name = 'O-PENDING', hl = 'MiniStatuslineModeNormal' },
+          ['noV'] = { name = 'O-PENDING', hl = 'MiniStatuslineModeNormal' },
+          ['no\22'] = { name = 'O-PENDING', hl = 'MiniStatuslineModeNormal' },
+          ['niI'] = { name = 'NORMAL', hl = 'MiniStatuslineModeNormal' },
+          ['niR'] = { name = 'NORMAL', hl = 'MiniStatuslineModeNormal' },
+          ['niV'] = { name = 'NORMAL', hl = 'MiniStatuslineModeNormal' },
+          ['nt'] = { name = 'NORMAL', hl = 'MiniStatuslineModeNormal' },
+          ['v'] = { name = 'VISUAL', hl = 'MiniStatuslineModeVisual' },
+          ['vs'] = { name = 'VISUAL', hl = 'MiniStatuslineModeVisual' },
+          ['V'] = { name = 'V-LINE', hl = 'MiniStatuslineModeVisual' },
+          ['Vs'] = { name = 'V-LINE', hl = 'MiniStatuslineModeVisual' },
+          ['\22'] = { name = 'V-BLOCK', hl = 'MiniStatuslineModeVisual' },
+          ['\22s'] = { name = 'V-BLOCK', hl = 'MiniStatuslineModeVisual' },
+          ['s'] = { name = 'SELECT', hl = 'MiniStatuslineModeVisual' },
+          ['S'] = { name = 'S-LINE', hl = 'MiniStatuslineModeVisual' },
+          ['\19'] = { name = 'S-BLOCK', hl = 'MiniStatuslineModeVisual' },
+          ['i'] = { name = 'INSERT', hl = 'MiniStatuslineModeInsert' },
+          ['ic'] = { name = 'INSERT', hl = 'MiniStatuslineModeInsert' },
+          ['ix'] = { name = 'INSERT', hl = 'MiniStatuslineModeInsert' },
+          ['R'] = { name = 'REPLACE', hl = 'MiniStatuslineModeReplace' },
+          ['Rc'] = { name = 'REPLACE', hl = 'MiniStatuslineModeReplace' },
+          ['Rx'] = { name = 'REPLACE', hl = 'MiniStatuslineModeReplace' },
+          ['Rv'] = { name = 'V-REPLACE', hl = 'MiniStatuslineModeReplace' },
+          ['Rvc'] = { name = 'V-REPLACE', hl = 'MiniStatuslineModeReplace' },
+          ['Rvx'] = { name = 'V-REPLACE', hl = 'MiniStatuslineModeReplace' },
+          ['c'] = { name = 'COMMAND', hl = 'MiniStatuslineModeCommand' },
+          ['cv'] = { name = 'EX', hl = 'MiniStatuslineModeCommand' },
+          ['ce'] = { name = 'EX', hl = 'MiniStatuslineModeCommand' },
+          ['r'] = { name = 'REPLACE', hl = 'MiniStatuslineModeReplace' },
+          ['rm'] = { name = 'MORE', hl = 'MiniStatuslineModeOther' },
+          ['r?'] = { name = 'CONFIRM', hl = 'MiniStatuslineModeOther' },
+          ['!'] = { name = 'SHELL', hl = 'MiniStatuslineModeOther' },
+          ['t'] = { name = 'TERMINAL', hl = 'MiniStatuslineModeOther' },
+        }
+        local mode = vim.fn.mode()
+        local info = mode_map[mode] or { name = mode, hl = 'MiniStatuslineModeOther' }
+        return info.name, info.hl
+      end
+
+      -- Remove filename from statusline
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_filename = function()
+        return ''
+      end
+
+      -- Remove fileinfo from statusline
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_fileinfo = function()
+        return ''
+      end
+
+      -- Remove git info from statusline
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_git = function()
+        return ''
+      end
+
+      -- Remove diagnostics from statusline
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_diagnostics = function()
+        return ''
+      end
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
@@ -963,21 +1155,21 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'php', 'phpdoc', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
+    config = function()
+      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'markdown', 'php', 'vim', 'vimdoc' }
+      -- Install parsers
+      for _, parser in ipairs(parsers) do
+        pcall(function()
+          vim.treesitter.require_language(parser)
+        end)
+      end
+      -- Enable highlighting for all buffers
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
+    end,
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
@@ -1006,7 +1198,7 @@ require('lazy').setup({
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!

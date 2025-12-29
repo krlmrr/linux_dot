@@ -1,62 +1,80 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 30,
-    "spacing": 4,
+    "margin-top": 10,
+    "margin-left": 6,
+    "margin-right": 6,
+    "spacing": 0,
 
     "modules-left": [
-        "custom/launcher",
-        "hyprland/workspaces"
-    ],
-    "modules-center": [
+        "hyprland/workspaces",
         "hyprland/window"
     ],
-    "modules-right": [
-        "tray",
-        "pulseaudio",
-        "network",
-        "battery",
+
+    "modules-center": [
         "clock"
     ],
 
-    "custom/launcher": {
-        "format": " ",
-        "on-click": "rofi -show drun",
-        "tooltip": false
-    },
+    "modules-right": [
+        "tray",
+        "backlight",
+        "pulseaudio",
+        "bluetooth",
+        "network",
+        "battery",
+        "custom/power"
+    ],
 
     "hyprland/workspaces": {
-        "format": "{name}",
         "on-click": "activate",
-        "sort-by-number": true
+        "format": "{name}",
+        "persistent-workspaces": {
+            "*": 5
+        }
     },
 
     "hyprland/window": {
         "format": "{}",
-        "max-length": 50,
+        "max-length": 40,
         "separate-outputs": true
     },
 
     "tray": {
-        "icon-size": 16,
+        "icon-size": 18,
         "spacing": 10
     },
 
+    "backlight": {
+        "format": "󰃟 {percent}%",
+        "tooltip-format": "Brightness - Scroll to adjust",
+        "scroll-step": 5,
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+
     "pulseaudio": {
-        "format": "{volume}% {icon}",
-        "format-muted": " ",
-        "format-icons": {
-            "default": ["", "", ""]
-        },
+        "format": "󰕾 {volume}%",
+        "format-muted": "󰖁 muted",
         "on-click": "pavucontrol"
     },
 
+    "bluetooth": {
+        "format": "󰂯",
+        "format-connected": "󰂱 {num_connections}",
+        "format-disabled": "󰂲",
+        "format-off": "󰂲",
+        "on-click": "~/.config/waybar/bluetooth-menu.sh",
+        "tooltip-format": "Bluetooth",
+        "tooltip-format-connected": "{device_alias}",
+        "tooltip-format-connected-battery": "{device_alias} {device_battery_percentage}%"
+    },
+
     "network": {
-        "format-wifi": "{essid} ",
-        "format-ethernet": "{ipaddr} ",
-        "format-disconnected": "Disconnected ",
-        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
-        "on-click": "nm-connection-editor"
+        "format-wifi": "󰤨 {signalStrength}%",
+        "format-ethernet": "",
+        "format-disconnected": "󰤭 disconnected",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+        "on-click": "~/.config/waybar/wifi-menu.sh"
     },
 
     "battery": {
@@ -64,15 +82,20 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% ",
-        "format-plugged": "{capacity}% ",
-        "format-icons": ["", "", "", "", ""]
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰚥 {capacity}%",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
 
     "clock": {
-        "format": "{:%H:%M}",
-        "format-alt": "{:%Y-%m-%d %H:%M}",
+        "format": "󰥔 {:%b %d  %I:%M %p}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "custom/power": {
+        "format": "󰐥",
+        "on-click": "~/.config/waybar/power-menu.sh",
+        "tooltip": false
     }
 }

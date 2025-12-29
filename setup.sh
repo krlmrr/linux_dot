@@ -24,27 +24,33 @@ if ! command -v pacman &> /dev/null; then
     exit 1
 fi
 
+# Refresh keyrings first
+info "Refreshing package keyrings..."
+sudo pacman -Sy --noconfirm archlinux-keyring cachyos-keyring 2>/dev/null || sudo pacman -Sy --noconfirm archlinux-keyring
+
 # Install packages
 info "Installing packages..."
 PACKAGES=(
     # Terminal & Shell
     ghostty
     zsh
+    tmux
 
     # Window Manager & Bar
     hyprland
     waybar
     rofi
+    swaybg
+    mako
 
     # Editor
     neovim
 
-    # PHP Development
-    php
-    php-sqlite
-    composer
+    # PHP Development (PHP itself installed via php.new)
     docker
     docker-compose
+    nodejs
+    npm
 
     # Fonts
     ttf-firacode-nerd
@@ -52,23 +58,34 @@ PACKAGES=(
     # Key remapping
     keyd
 
+    # File Manager
+    nautilus
+
     # Utilities
     git
+    lazygit
     ripgrep
     fd
+    brightnessctl
+    jq
+    solaar
 )
 
 sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
 
-# Install DDEV from AUR if paru is available
+# Remove unwanted packages
+info "Removing unwanted packages..."
+sudo pacman -Rns --noconfirm alacritty kitty fish cachyos-fish-config fish-autopair fish-pure-prompt fisher 2>/dev/null || true
+
+# Install AUR packages if paru is available
 if command -v paru &> /dev/null; then
     info "Installing AUR packages..."
-    paru -S --needed --noconfirm ddev-bin 2>/dev/null || warn "DDEV installation skipped"
+    paru -S --needed --noconfirm ddev-bin 1password logiops 2>/dev/null || warn "Some AUR packages skipped"
 fi
 
 # Create config directories
 info "Creating config directories..."
-mkdir -p ~/.config/{hypr,nvim,ghostty,waybar,rofi}
+mkdir -p ~/.config/{hypr,nvim,ghostty,waybar,rofi,mako}
 
 # Create symlinks
 info "Creating symlinks..."
@@ -105,9 +122,22 @@ create_symlink "$DOTFILES_DIR/waybar/style.css" ~/.config/waybar/style.css
 create_symlink "$DOTFILES_DIR/rofi/config.rasi" ~/.config/rofi/config.rasi
 create_symlink "$DOTFILES_DIR/rofi/onedark.rasi" ~/.config/rofi/onedark.rasi
 
+# Mako
+create_symlink "$DOTFILES_DIR/mako/config" ~/.config/mako/config
+
 # Zsh
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" ~/.zshrc
-create_symlink "$DOTFILES_DIR/zsh/.p10k.zsh" ~/.p10k.zsh
+
+# Tmux
+create_symlink "$DOTFILES_DIR/tmux/tmux.conf" ~/.tmux.conf
+
+# Install MonoLisa font
+info "Installing MonoLisa font..."
+mkdir -p ~/.local/share/fonts
+unzip -o "$DOTFILES_DIR/fonts/monolisa-font-main.zip" -d /tmp/monolisa
+cp /tmp/monolisa/monolisa-font-main/fonts/*.ttf ~/.local/share/fonts/
+fc-cache -f ~/.local/share/fonts/
+rm -rf /tmp/monolisa
 
 # Setup keyd
 info "Setting up keyd..."
@@ -127,12 +157,43 @@ if ! groups | grep -q docker; then
     warn "Added $USER to docker group. Log out and back in for this to take effect."
 fi
 
+# Install Claude Code CLI
+info "Installing Claude Code CLI..."
+npm install -g @anthropic-ai/claude-code
+
+# Install PHP via php.new (includes PHP, Composer, Laravel)
+info "Installing PHP via php.new..."
+/bin/bash -c "$(curl -fsSL https://php.new/install/linux)"
+
+# Install oh-my-zsh
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    info "Installing oh-my-zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+# Install oh-my-zsh plugins (always use home directory)
+OMZ_CUSTOM="$HOME/.oh-my-zsh/custom"
+mkdir -p "$OMZ_CUSTOM/plugins"
+if [ ! -d "$OMZ_CUSTOM/plugins/zsh-autosuggestions" ]; then
+    info "Installing zsh-autosuggestions plugin..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$OMZ_CUSTOM/plugins/zsh-autosuggestions"
+fi
+if [ ! -d "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
+    info "Installing zsh-syntax-highlighting plugin..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting "$OMZ_CUSTOM/plugins/zsh-syntax-highlighting"
+fi
+
 # Set Zsh as default shell
 if [ "$SHELL" != "/usr/bin/zsh" ]; then
     info "Setting Zsh as default shell..."
     chsh -s /usr/bin/zsh
     warn "Shell changed to Zsh. Log out and back in for this to take effect."
 fi
+
+# Set dark mode for GNOME/GTK apps
+info "Setting dark mode..."
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 
 echo ""
 echo -e "${GREEN}=== Setup Complete ===${NC}"
