@@ -16,7 +16,7 @@
     ],
 
     "modules-right": [
-        "tray",
+        "custom/apps",
         "backlight",
         "pulseaudio",
         "bluetooth",
@@ -44,9 +44,11 @@
         "separate-outputs": true
     },
 
-    "tray": {
-        "icon-size": 18,
-        "spacing": 10
+    "custom/apps": {
+        "exec": "~/.config/waybar/scripts/tray-apps.sh status",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "~/.config/waybar/scripts/tray-apps.sh menu"
     },
 
     "backlight": {
