@@ -24,6 +24,10 @@ if hyprctl monitors -j | jq -e '.[] | select(.name == "DP-1")' > /dev/null 2>&1;
     done
     hyprctl keyword workspace "8,monitor:eDP-1,default:true"
 
+    # Ensure default workspaces exist on each monitor
+    hyprctl dispatch workspace 8  # Create workspace 8 on eDP-1
+    hyprctl dispatch workspace 3  # Switch back to workspace 3 on DP-1
+
     # Update waybar config for dual monitor
     cat > "$WAYBAR_LIVE" << 'WAYBAR_EOF'
 {
