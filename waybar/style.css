@@ -29,12 +29,14 @@ window#waybar {
     background: #3e4451;
     transition: all 0.3s ease-in-out;
     opacity: 0.4;
+    min-width: 20px;
 }
 
 #workspaces button label {
     margin: 0;
     padding: 0;
 }
+
 
 #workspaces button.visible {
     color: #61afef;
@@ -57,6 +59,7 @@ window#waybar {
 #workspaces button:hover {
     color: #abb2bf;
     opacity: 0.8;
+    padding: 0px 8px;
 }
 
 #workspaces button.active:hover {
@@ -81,8 +84,6 @@ window#waybar.empty #window {
 /* Right side modules */
 #backlight,
 #pulseaudio,
-#bluetooth,
-#network,
 #battery {
     background: rgba(40, 44, 52, 0.9);
     color: #98c379;
@@ -90,6 +91,27 @@ window#waybar.empty #window {
     margin: 5px;
     border-radius: 15px;
     border: 2px solid #98c379;
+}
+
+/* Icon-only modules */
+#network {
+    background: rgba(40, 44, 52, 0.9);
+    color: #98c379;
+    padding: 5px 14px 5px 10px;
+    margin: 5px;
+    border-radius: 15px;
+    border: 2px solid #98c379;
+    min-width: 16px;
+}
+
+#bluetooth {
+    background: rgba(40, 44, 52, 0.9);
+    color: #98c379;
+    padding: 5px 12px 5px 14px;
+    margin: 5px;
+    border-radius: 15px;
+    border: 2px solid #98c379;
+    min-width: 16px;
 }
 
 #backlight:hover,
