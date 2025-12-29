@@ -5,7 +5,8 @@ SCRIPT_DIR="$(dirname "$0")"
 LAST_STATE=""
 
 while true; do
-    CURRENT_STATE=$(hyprctl monitors -j | jq -r '[.[].name] | sort | join(",")')
+    # Simpler check - just count monitors and check for DP-1
+    CURRENT_STATE=$(hyprctl monitors -j | jq -r 'length, (any(.[]; .name == "DP-1"))')
 
     if [ "$CURRENT_STATE" != "$LAST_STATE" ] && [ -n "$LAST_STATE" ]; then
         sleep 1

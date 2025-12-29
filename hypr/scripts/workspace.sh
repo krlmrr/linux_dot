@@ -3,15 +3,11 @@
 # Usage: workspace.sh <1-5>
 
 WS=$1
-CURRENT_MONITOR=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .name')
+# Single hyprctl call, extract both values with one jq
+read -r CURRENT_MONITOR HAS_EXTERNAL <<< $(hyprctl monitors -j | jq -r '([.[] | select(.focused) | .name][0]) + " " + (if any(.[]; .name == "DP-1") then "1" else "0" end)')
 
-# Check if external monitor exists
-HAS_EXTERNAL=$(hyprctl monitors -j | jq -e '.[] | select(.name == "DP-1")' > /dev/null 2>&1 && echo "yes" || echo "no")
-
-if [ "$HAS_EXTERNAL" = "yes" ] && [ "$CURRENT_MONITOR" = "eDP-1" ]; then
-    # Dual monitor, on laptop - use workspaces 6-10
+if [ "$HAS_EXTERNAL" = "1" ] && [ "$CURRENT_MONITOR" = "eDP-1" ]; then
     hyprctl dispatch workspace $((WS + 5))
 else
-    # Single monitor OR on external - use workspaces 1-5
     hyprctl dispatch workspace $WS
 fi
