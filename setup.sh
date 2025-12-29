@@ -32,44 +32,45 @@ sudo pacman -Sy --noconfirm archlinux-keyring cachyos-keyring 2>/dev/null || sud
 info "Installing packages..."
 PACKAGES=(
     # Terminal & Shell
-    ghostty
-    zsh
-    tmux
+    ghostty         # GPU-accelerated terminal
+    zsh             # Shell
+    tmux            # Terminal multiplexer
 
-    # Window Manager & Bar
-    hyprland
-    waybar
-    rofi
-    swaybg
-    mako
-    sddm
+    # Window Manager & Desktop
+    hyprland        # Wayland compositor
+    waybar          # Status bar
+    rofi            # App launcher
+    swaybg          # Wallpaper setter
+    mako            # Notification daemon
+    sddm            # Login manager
 
     # Editor
-    neovim
+    neovim          # Text editor
 
-    # PHP Development (PHP itself installed via php.new)
-    docker
-    docker-compose
-    nodejs
-    npm
+    # Development
+    docker          # Containerization
+    docker-compose  # Multi-container Docker apps
+    nodejs          # JavaScript runtime
+    npm             # Node package manager
 
     # Fonts
-    ttf-firacode-nerd
+    ttf-firacode-nerd  # Nerd font with ligatures
 
     # Key remapping
-    keyd
+    keyd            # Key remapping daemon (Alt/Ctrl swap)
 
     # File Manager
-    nautilus
+    nautilus        # GNOME file manager
 
     # Utilities
-    git
-    lazygit
-    ripgrep
-    fd
-    brightnessctl
-    jq
-    solaar
+    git             # Version control
+    lazygit         # Terminal UI for git
+    ripgrep         # Fast grep for searching code
+    fd              # Fast find alternative
+    brightnessctl   # Screen brightness control
+    jq              # JSON processor for scripts
+    socat           # Socket communication (monitor hotplug detection)
+    solaar          # Logitech device manager
 )
 
 sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
