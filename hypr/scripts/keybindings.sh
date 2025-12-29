@@ -53,4 +53,4 @@ Tmux: Ctrl+A :new -s name — New Session
 Other: Capslock (tap) — Escape
 Other: Capslock (hold) — Control"
 
-echo "$keybindings" | rofi -dmenu -p "Keybindings" -i -theme-str 'window {width: 400px;}'
+echo "$keybindings" | rofi -dmenu -p "Keybindings" -i -theme-str 'window {width: 600px;}'

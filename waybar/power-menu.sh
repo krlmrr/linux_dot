@@ -1,6 +1,6 @@
 #!/bin/bash
 
-choice=$(echo -e "Logout\nRestart\nShutdown\nCancel" | rofi -dmenu -p "Power" -theme-str 'window {width: 200px;}')
+choice=$(echo -e "Logout\nRestart\nShutdown\nCancel" | rofi -dmenu -p "Power" -theme-str 'window {width: 600px;} element-text {horizontal-align: 0.5;}')
 
 case "$choice" in
     Logout)
