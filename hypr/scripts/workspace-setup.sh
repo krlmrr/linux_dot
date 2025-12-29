@@ -9,7 +9,6 @@ WAYBAR_LIVE="$HOME/.config/waybar/config.jsonc"
 # Check if external monitor is connected (single hyprctl call)
 if hyprctl monitors -j | jq -e 'any(.[]; .name == "DP-1")' > /dev/null 2>&1; then
     # Dual monitor setup
-    echo "Dual monitor detected"
 
     # Batch workspace bindings for DP-1
     hyprctl --batch "keyword workspace 1,monitor:DP-1; keyword workspace 2,monitor:DP-1; keyword workspace 3,monitor:DP-1,default:true; keyword workspace 4,monitor:DP-1; keyword workspace 5,monitor:DP-1"
@@ -29,7 +28,6 @@ if hyprctl monitors -j | jq -e 'any(.[]; .name == "DP-1")' > /dev/null 2>&1; the
 
 else
     # Single laptop monitor
-    echo "Single monitor detected"
 
     # Move windows from 6-10 to 1-5 (single hyprctl clients call)
     CLIENTS=$(hyprctl clients -j)
