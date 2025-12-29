@@ -77,6 +77,8 @@
     },
 
     "network": {
+        "interface": "wlan0",
+        "format": "󰤨",
         "format-wifi": "󰤨",
         "format-ethernet": "󰈀",
         "format-disconnected": "󰤮",
