@@ -71,6 +71,11 @@ PACKAGES=(
     jq              # JSON processor for scripts
     socat           # Socket communication (monitor hotplug detection)
     solaar          # Logitech device manager
+
+    # Screenshots
+    grim            # Screenshot tool
+    slurp           # Region selector
+    wl-clipboard    # Clipboard utilities (wl-copy, wl-paste)
 )
 
 sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
