@@ -160,6 +160,9 @@ else
     done
     hyprctl keyword workspace "3,monitor:eDP-1,default:true"
 
+    # Switch to workspace 3
+    hyprctl dispatch workspace 3
+
     # Update waybar config for single monitor
     cat > "$WAYBAR_LIVE" << 'WAYBAR_EOF'
 {
