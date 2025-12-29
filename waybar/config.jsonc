@@ -27,11 +27,14 @@
 
     "hyprland/workspaces": {
         "on-click": "activate",
+        "on-scroll-up": "hyprctl dispatch workspace r-1",
+        "on-scroll-down": "hyprctl dispatch workspace r+1",
         "format": "{name}",
         "all-outputs": false,
+        "active-only": false,
         "persistent-workspaces": {
             "DP-1": [1, 2, 3, 4, 5],
-            "eDP-1": [6, 7, 8, 9, 10]
+            "eDP-1": [1, 2, 3, 4, 5]
         }
     },
 
