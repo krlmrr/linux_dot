@@ -81,7 +81,7 @@ sudo pacman -Rns --noconfirm alacritty kitty fish cachyos-fish-config fish-autop
 # Install AUR packages if paru is available
 if command -v paru &> /dev/null; then
     info "Installing AUR packages..."
-    paru -S --needed --noconfirm ddev-bin 1password logiops sddm-sugar-candy-git 2>/dev/null || warn "Some AUR packages skipped"
+    paru -S --needed --noconfirm ddev-bin 1password logiops sddm-astronaut-theme 2>/dev/null || warn "Some AUR packages skipped"
 fi
 
 # Create config directories
@@ -154,15 +154,20 @@ info "Setting up SDDM..."
 sudo mkdir -p /etc/sddm.conf.d
 sudo rm -f /etc/sddm.conf.d/theme.conf
 sudo ln -sf "$DOTFILES_DIR/sddm/sddm.conf" /etc/sddm.conf.d/theme.conf
-sudo rm -f /usr/share/sddm/themes/sugar-candy/theme.conf
-sudo ln -sf "$DOTFILES_DIR/sddm/theme.conf" /usr/share/sddm/themes/sugar-candy/theme.conf
+# Symlink OneDark theme config and wallpaper to astronaut theme
+sudo rm -f /usr/share/sddm/themes/sddm-astronaut-theme/Themes/onedark.conf
+sudo rm -f /usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/onedark.jpg
+sudo ln -sf "$DOTFILES_DIR/sddm/theme.conf" /usr/share/sddm/themes/sddm-astronaut-theme/Themes/onedark.conf
+sudo ln -sf "$DOTFILES_DIR/wallpapers/peakpx.jpg" /usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/onedark.jpg
+# Update metadata to use OneDark config
+sudo sed -i 's|ConfigFile=Themes/.*\.conf|ConfigFile=Themes/onedark.conf|' /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
 # Disable other display managers
 sudo systemctl disable ly 2>/dev/null || true
 sudo systemctl disable gdm 2>/dev/null || true
 sudo systemctl disable lightdm 2>/dev/null || true
 # Enable SDDM
 sudo systemctl enable sddm
-info "SDDM configured with OneDark theme"
+info "SDDM configured with Astronaut theme (OneDark)"
 
 # Setup Docker
 info "Setting up Docker..."
