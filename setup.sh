@@ -42,6 +42,7 @@ PACKAGES=(
     rofi
     swaybg
     mako
+    sddm
 
     # Editor
     neovim
@@ -80,7 +81,7 @@ sudo pacman -Rns --noconfirm alacritty kitty fish cachyos-fish-config fish-autop
 # Install AUR packages if paru is available
 if command -v paru &> /dev/null; then
     info "Installing AUR packages..."
-    paru -S --needed --noconfirm ddev-bin 1password logiops 2>/dev/null || warn "Some AUR packages skipped"
+    paru -S --needed --noconfirm ddev-bin 1password logiops sddm-sugar-candy-git 2>/dev/null || warn "Some AUR packages skipped"
 fi
 
 # Create config directories
@@ -147,6 +148,21 @@ sudo ln -s "$DOTFILES_DIR/keyd/default.conf" /etc/keyd/default.conf
 sudo systemctl enable keyd
 sudo systemctl restart keyd
 info "Keyd configured (symlinked from dotfiles)"
+
+# Setup SDDM
+info "Setting up SDDM..."
+sudo mkdir -p /etc/sddm.conf.d
+sudo rm -f /etc/sddm.conf.d/theme.conf
+sudo ln -sf "$DOTFILES_DIR/sddm/sddm.conf" /etc/sddm.conf.d/theme.conf
+sudo rm -f /usr/share/sddm/themes/sugar-candy/theme.conf
+sudo ln -sf "$DOTFILES_DIR/sddm/theme.conf" /usr/share/sddm/themes/sugar-candy/theme.conf
+# Disable other display managers
+sudo systemctl disable ly 2>/dev/null || true
+sudo systemctl disable gdm 2>/dev/null || true
+sudo systemctl disable lightdm 2>/dev/null || true
+# Enable SDDM
+sudo systemctl enable sddm
+info "SDDM configured with OneDark theme"
 
 # Setup Docker
 info "Setting up Docker..."
