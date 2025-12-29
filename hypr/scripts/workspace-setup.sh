@@ -102,9 +102,9 @@ if hyprctl monitors -j | jq -e '.[] | select(.name == "DP-1")' > /dev/null 2>&1;
     },
 
     "bluetooth": {
-        "format": "",
-        "format-connected": "",
-        "format-connected-battery": "",
+        "format": "󰂯",
+        "format-connected": "󰂯",
+        "format-connected-battery": "󰂯",
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
@@ -113,8 +113,8 @@ if hyprctl monitors -j | jq -e '.[] | select(.name == "DP-1")' > /dev/null 2>&1;
     },
 
     "network": {
-        "format-wifi": "",
-        "format-ethernet": "",
+        "format-wifi": "󰤨",
+        "format-ethernet": "󰂯",
         "format-disconnected": "󰤮",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
         "on-click": "nm-connection-editor"
@@ -236,9 +236,9 @@ else
     },
 
     "bluetooth": {
-        "format": "",
-        "format-connected": "",
-        "format-connected-battery": "",
+        "format": "󰂯",
+        "format-connected": "󰂯",
+        "format-connected-battery": "󰂯",
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
@@ -247,8 +247,8 @@ else
     },
 
     "network": {
-        "format-wifi": "",
-        "format-ethernet": "",
+        "format-wifi": "󰤨",
+        "format-ethernet": "󰂯",
         "format-disconnected": "󰤮",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
         "on-click": "nm-connection-editor"
