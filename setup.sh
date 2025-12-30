@@ -117,7 +117,7 @@ create_symlink() {
 create_symlink "$DOTFILES_DIR/hypr/hyprland.conf" ~/.config/hypr/hyprland.conf
 
 # Neovim
-create_symlink "$DOTFILES_DIR/nvim/config" ~/.config/nvim
+create_symlink "$DOTFILES_DIR/nvim" ~/.config/nvim
 
 # Ghostty
 create_symlink "$DOTFILES_DIR/ghostty/config" ~/.config/ghostty/config
