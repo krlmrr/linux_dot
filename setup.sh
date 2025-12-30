@@ -77,6 +77,9 @@ PACKAGES=(
     grim            # Screenshot tool
     slurp           # Region selector
     wl-clipboard    # Clipboard utilities (wl-copy, wl-paste)
+
+    # Media
+    mpv             # Media player (used for screensaver)
 )
 
 sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"

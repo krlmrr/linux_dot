@@ -1,49 +1,46 @@
 #!/bin/bash
-# Space wallpaper screensaver with fade transitions
+# Space wallpaper screensaver - fullscreen slideshow with mpv
 
 WALLPAPER_DIR="$HOME/dotfiles/wallpapers/space"
-NORMAL_WALLPAPER="$HOME/dotfiles/wallpapers/peakpx.jpg"
-FADE_DURATION=2
-DISPLAY_TIME=30
-
-# Ensure swww daemon is running
-pgrep -x swww-daemon > /dev/null || swww-daemon &
-sleep 0.5
+SLIDE_DURATION=8
 
 case "$1" in
     start)
-        # Create marker file
-        touch /tmp/screensaver-active
+        # Kill any existing screensaver
+        pkill -f "mpv.*title=screensaver" 2>/dev/null
 
-        # Get list of space wallpapers
-        wallpapers=($(find "$WALLPAPER_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.webp" \) 2>/dev/null))
+        # Get list of wallpapers
+        mapfile -t WALLPAPERS < <(find "$WALLPAPER_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.webp" \) | shuf)
 
-        if [ ${#wallpapers[@]} -eq 0 ]; then
+        if [ ${#WALLPAPERS[@]} -eq 0 ]; then
             echo "No wallpapers found in $WALLPAPER_DIR"
             exit 1
         fi
 
-        # Cycle through wallpapers until stopped
-        while [ -f /tmp/screensaver-active ]; do
-            for wallpaper in "${wallpapers[@]}"; do
-                [ ! -f /tmp/screensaver-active ] && break
-                swww img "$wallpaper" \
-                    --transition-type fade \
-                    --transition-duration "$FADE_DURATION" \
-                    --transition-fps 60
-                sleep "$DISPLAY_TIME"
-            done
-        done
+        # Launch mpv as fullscreen slideshow
+        mpv --fullscreen \
+            --loop-playlist=inf \
+            --image-display-duration=$SLIDE_DURATION \
+            --no-audio \
+            --no-osc \
+            --no-osd-bar \
+            --no-input-default-bindings \
+            --input-conf=/dev/null \
+            --cursor-autohide=always \
+            --force-window=immediate \
+            --title="screensaver" \
+            "${WALLPAPERS[@]}" &
+
+        echo $! > /tmp/screensaver.pid
         ;;
 
     stop)
-        # Remove marker and restore normal wallpaper
-        rm -f /tmp/screensaver-active
-        sleep 0.5
-        swww img "$NORMAL_WALLPAPER" \
-            --transition-type fade \
-            --transition-duration 1 \
-            --transition-fps 60
+        # Kill screensaver
+        if [ -f /tmp/screensaver.pid ]; then
+            kill $(cat /tmp/screensaver.pid) 2>/dev/null
+            rm -f /tmp/screensaver.pid
+        fi
+        pkill -f "mpv.*title=screensaver" 2>/dev/null
         ;;
 
     *)
