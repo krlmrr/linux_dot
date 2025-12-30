@@ -84,6 +84,8 @@ EOF
             --force-window=immediate \
             --title="screensaver" \
             --input-conf="$INPUT_CONF" \
+            --panscan=1.0 \
+            --video-zoom=0 \
             "${WALLPAPERS[@]}" &
 
         echo $! > /tmp/screensaver.pid
