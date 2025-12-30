@@ -73,14 +73,14 @@ LEFT quit
 RIGHT quit
 EOF
 
-        # Launch mpv as fullscreen slideshow
+        # Launch mpv as fullscreen slideshow (quits on any input)
         mpv --fullscreen \
             --loop-playlist=inf \
             --image-display-duration=$SLIDE_DURATION \
             --no-audio \
             --no-osc \
             --no-osd-bar \
-            --cursor-autohide=100 \
+            --cursor-autohide=0 \
             --force-window=immediate \
             --title="screensaver" \
             --input-conf="$INPUT_CONF" \
