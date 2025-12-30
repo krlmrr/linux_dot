@@ -139,6 +139,14 @@ create_symlink "$DOTFILES_DIR/zsh/.zshrc" ~/.zshrc
 # Tmux
 create_symlink "$DOTFILES_DIR/tmux/tmux.conf" ~/.tmux.conf
 
+# Install TPM (Tmux Plugin Manager) and plugins
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+    info "Installing TPM (Tmux Plugin Manager)..."
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    # Install plugins
+    ~/.tmux/plugins/tpm/bin/install_plugins || true
+fi
+
 # Install MonoLisa font
 info "Installing MonoLisa font..."
 mkdir -p ~/.local/share/fonts
