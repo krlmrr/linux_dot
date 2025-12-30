@@ -1,6 +1,6 @@
 return {
     'nvimdev/dashboard-nvim',
-    lazy = false,
+    event = 'VimEnter',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
         require('dashboard').setup({
@@ -20,7 +20,7 @@ return {
                 },
                 packages = { enable = false },
                 project = { enable = false },
-                mru = { limit = 5, cwd_only = false },
+                mru = { limit = 5, cwd_only = true },
                 footer = {},
             },
         })
