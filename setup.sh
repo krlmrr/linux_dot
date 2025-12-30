@@ -40,7 +40,8 @@ PACKAGES=(
     hyprland        # Wayland compositor
     waybar          # Status bar
     rofi            # App launcher
-    swaybg          # Wallpaper setter
+    swww            # Animated wallpaper daemon
+    hypridle        # Idle daemon
     mako            # Notification daemon
     sddm            # Login manager
 
