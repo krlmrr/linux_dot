@@ -50,29 +50,29 @@ alias ts="tmux source ~/.tmux.conf"
 # Laravel (DDEV)
 alias a="ddev artisan"
 alias solo="a solo"
-alias pam="ddev artisan migrate"
-alias pamf="ddev artisan migrate:fresh"
-alias pamfs="ddev artisan migrate:fresh --seed"
+alias pam="a migrate"
+alias pamf="a migrate:fresh"
+alias pamfs="a migrate:fresh --seed"
 
 # Laravel Test
-alias test="clear && ddev artisan test"
-alias tp="clear && ddev artisan test -p"
-alias tf="clear && ddev artisan test --filter"
+alias test="clear && a test"
+alias tp="clear && a test -p"
+alias tf="clear && a test --filter"
 
 # Laravel Vendor
 alias dust="ddev exec ./vendor/bin/duster fix"
 alias duster="ddev exec ./vendor/bin/duster"
 alias pint="ddev exec ./vendor/bin/pint"
-alias pail="ddev artisan pail"
+alias pail="a pail"
 alias stan="ddev exec ./vendor/bin/phpstan analyse"
 alias pest="ddev exec ./vendor/bin/pest"
 
 # Filament
-alias fu="ddev artisan make:filament-user"
-alias frg="ddev artisan make:filament-resource --generate"
-alias res="ddev artisan make:filament-resource"
-alias fp="ddev artisan make:filament-page"
-alias frm="ddev artisan make:filament-relation-manager"
+alias fu="a make:filament-user"
+alias frg="a make:filament-resource --generate"
+alias res="a make:filament-resource"
+alias fp="a make:filament-page"
+alias frm="a make:filament-relation-manager"
 
 # NPM
 alias watch="npm run watch"
