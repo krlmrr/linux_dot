@@ -1,0 +1,43 @@
+return {
+  "folke/noice.nvim",
+  event = "VeryLazy",
+  dependencies = {
+    "MunifTanjim/nui.nvim",
+    "rcarriga/nvim-notify",
+  },
+  opts = {
+    views = {
+      mini = {
+        timeout = 3000,
+        position = { row = -2 },
+      },
+    },
+    lsp = {
+      override = {
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+        ["vim.lsp.util.stylize_markdown"] = true,
+        ["cmp.entry.get_documentation"] = true,
+      },
+    },
+    presets = {
+      bottom_search = true,
+      command_palette = true,
+      long_message_to_split = true,
+      inc_rename = false,
+      lsp_doc_border = true,
+    },
+    routes = {
+      -- Route most messages to mini view (subtle bottom line)
+      { filter = { event = "msg_show" }, view = "mini" },
+      { filter = { event = "notify" }, view = "mini" },
+      -- Skip noisy messages entirely
+      { filter = { event = "msg_show", find = "written" }, opts = { skip = true } },
+      { filter = { event = "msg_show", find = "lines in buffer" }, opts = { skip = true } },
+      { filter = { event = "notify", find = "lines in buffer" }, opts = { skip = true } },
+      { filter = { event = "msg_show", find = "E162" }, opts = { skip = true } },
+      { filter = { event = "notify", find = "Initializing" }, opts = { skip = true } },
+      { filter = { event = "msg_show", find = "Initializing" }, opts = { skip = true } },
+      { filter = { event = "lsp", kind = "progress", find = "Initializing" }, opts = { skip = true } },
+    },
+  },
+}
