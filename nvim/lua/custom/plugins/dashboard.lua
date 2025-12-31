@@ -82,7 +82,7 @@ return {
                         end
                     end
 
-                    -- If no MRU files, put cursor on "empty files" line and lock it
+                    -- If no MRU files, show cursorline on "empty files" and lock cursor
                     if max_line == min_line then
                         local empty_line = nil
                         for i, line in ipairs(lines) do
