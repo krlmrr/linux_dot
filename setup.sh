@@ -42,6 +42,7 @@ PACKAGES=(
     rofi            # App launcher
     swww            # Animated wallpaper daemon
     hypridle        # Idle daemon
+    hyprlock        # Lock screen
     mako            # Notification daemon
     sddm            # Login manager
 
