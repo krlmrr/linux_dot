@@ -1,5 +1,7 @@
-# Auto-attach to tmux
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+setopt histignorespace
+
+# Auto-attach to tmux (skip if NVIM_RESTART is set)
+if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ -z "$NVIM_RESTART" ]; then
     while true; do
         if [ "$(tmux list-sessions 2>/dev/null | wc -l)" -gt 1 ]; then
             # Multiple sessions - show picker
@@ -14,6 +16,7 @@ export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="robbyrussell"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#757575'
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="nvr *"
 
 plugins=(
     git
@@ -22,6 +25,12 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+
+# Ignore commands starting with space in history
+setopt HIST_IGNORE_SPACE
+
+# Nvim restart helper (used by <leader>rc) - only "nvr" appears in history
+nvr() { cd "$1" && clear && nvim "${2:-}"; }
 
 # Override prompt to use blue instead of cyan for directory
 PROMPT='%{$fg_bold[red]%}➜ %{$fg_bold[blue]%}%c%{$reset_color%} $(git_prompt_info)'
