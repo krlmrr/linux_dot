@@ -36,7 +36,7 @@ alias nz="nvim ~/.zshrc"
 alias lz="lazygit"
 alias yeet="sudo rm -rf"
 alias vim="nvim"
-alias nv="nvim"
+alias nv="clear && nvim"
 alias mkd="mkdir -p"
 alias sourcez="source ~/.zshrc"
 
