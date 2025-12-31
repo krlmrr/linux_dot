@@ -9,7 +9,8 @@ return {
                 week_header = { enable = false },
                 header = {
                     '',
-                    ' ⟨ neovim ⟩ ',
+                    '',
+                    ' ⟨ karlm ⟩ ',
                     '',
                 },
                 shortcut = {
