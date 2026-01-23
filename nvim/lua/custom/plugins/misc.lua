@@ -58,5 +58,10 @@ return {
   { 'numToStr/Comment.nvim',  opts = {} },
 
   -- Auto-close HTML tags
-  { 'windwp/nvim-ts-autotag', opts = {} },
+  {
+    'windwp/nvim-ts-autotag',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = {},
+  },
 }
