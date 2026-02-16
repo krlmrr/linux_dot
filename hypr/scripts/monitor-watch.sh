@@ -10,6 +10,8 @@ while true; do
 
     if [ "$CURRENT_STATE" != "$LAST_STATE" ] && [ -n "$LAST_STATE" ]; then
         sleep 1
+        hyprctl reload
+        sleep 1
         "$SCRIPT_DIR/workspace-setup.sh"
     fi
 
