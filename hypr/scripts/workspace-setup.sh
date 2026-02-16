@@ -24,7 +24,7 @@ if hyprctl monitors -j | jq -e 'any(.[]; .name == "DP-1")' > /dev/null 2>&1; the
     hyprctl --batch "dispatch workspace 8; dispatch workspace 3"
 
     # Update waybar config - dual monitor persistent-workspaces
-    jq '."hyprland/workspaces"."persistent-workspaces" = {"DP-1": [1,2,3,4,5], "eDP-1": [6,7,8,9,10]}' "$WAYBAR_BASE" > "$WAYBAR_LIVE"
+    jq '."hyprland/workspaces"."persistent-workspaces" = {"DP-1": [1,2,3,4,5], "eDP-1": [6,7,8,9,10]}' "$WAYBAR_BASE" > "${WAYBAR_LIVE}.tmp" && mv "${WAYBAR_LIVE}.tmp" "$WAYBAR_LIVE"
 
 else
     # Single laptop monitor
@@ -48,7 +48,7 @@ else
     hyprctl dispatch workspace 3
 
     # Update waybar config - single monitor persistent-workspaces
-    jq '."hyprland/workspaces"."persistent-workspaces" = {"eDP-1": [1,2,3,4,5]}' "$WAYBAR_BASE" > "$WAYBAR_LIVE"
+    jq '."hyprland/workspaces"."persistent-workspaces" = {"eDP-1": [1,2,3,4,5]}' "$WAYBAR_BASE" > "${WAYBAR_LIVE}.tmp" && mv "${WAYBAR_LIVE}.tmp" "$WAYBAR_LIVE"
 fi
 
 # Restart waybar
