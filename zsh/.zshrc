@@ -92,3 +92,7 @@ alias build="npm run build"
 # Python
 alias python="python3"
 alias pip="pip3"
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# OpenClaw Completion
+source "/home/karlm/.openclaw/completions/openclaw.zsh"
