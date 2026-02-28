@@ -40,6 +40,7 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 -- Buffers and windows
 vim.keymap.set("n", "<leader>x", "<cmd>bd!<cr>", { desc = "Close buffer (force)" })
 vim.keymap.set("n", "<leader>w", function()
+  if vim.fn.getcmdwintype() ~= "" then return end
   if vim.bo.filetype == 'dashboard' or vim.bo.filetype == 'neo-tree' then return end
   -- Count non-neo-tree windows
   local real_wins = 0
@@ -52,7 +53,9 @@ vim.keymap.set("n", "<leader>w", function()
     vim.cmd('close')
   else
     vim.cmd('Neotree close')
-    vim.cmd('enew | bd# | Dashboard')
+    vim.cmd('enew')
+    pcall(vim.cmd, 'bd#')
+    vim.cmd('Dashboard')
   end
 end, { desc = "Close split (or return to dashboard)" })
 vim.keymap.set("n", "<leader>s", "<cmd>w<cr>", { desc = "Save file" })
@@ -132,3 +135,11 @@ vim.keymap.set('n', 'j', 'j_', { noremap = true, silent = true, desc = "Down and
 vim.keymap.set('n', 'k', 'k_', { noremap = true, silent = true, desc = "Up and first non-blank" })
 vim.keymap.set('n', '<Down>', 'j_', { noremap = true, silent = true, desc = "Down and first non-blank" })
 vim.keymap.set('n', '<Up>', 'k_', { noremap = true, silent = true, desc = "Up and first non-blank" })
+
+-- PHP dd() wrapper
+vim.keymap.set('n', '<leader>dd', function()
+  local line = vim.api.nvim_get_current_line()
+  local indent = line:match('^(%s*)')
+  local content = line:gsub('^%s*', ''):gsub(';%s*$', '')
+  vim.api.nvim_set_current_line(indent .. 'dd(' .. content .. ');')
+end, { desc = "Wrap line with dd()" })

@@ -3,7 +3,7 @@ return {
     event = 'VimEnter',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-        -- Set highlights before dashboard loads
+        -- Highlights are set by onedark.lua after theme loads
         vim.cmd('highlight DashboardShortCut guifg=#61afef guibg=NONE')
         vim.cmd('highlight DashboardShortCutCursor guifg=#61afef guibg=#3e4452')
         vim.cmd('highlight DashboardHeader guifg=#abb2bf guibg=NONE')
@@ -51,9 +51,17 @@ return {
                 -- Disable <leader>e on dashboard
                 vim.keymap.set('n', '<leader>e', '<Nop>', { buffer = true, silent = true })
 
+                local cursor = require("config.cursor")
                 vim.defer_fn(function()
-                    vim.cmd('highlight Cursor blend=100')
-                    vim.opt.guicursor:append('a:Cursor/lCursor')
+                    cursor.hide()
+
+                    -- Re-hide cursor when returning from popups/dialogs
+                    vim.api.nvim_create_autocmd('WinEnter', {
+                        buffer = 0,
+                        callback = cursor.hide,
+                    })
+
+                    -- CursorLine color
                     vim.cmd('highlight CursorLine guibg=#3e4452')
                     vim.opt_local.cursorline = true
                     vim.wo.cursorlineopt = 'line'
@@ -122,10 +130,6 @@ return {
                         return
                     end
 
-                    -- Highlight groups for shortcut keys
-                    vim.cmd('highlight DashboardShortCut guifg=#61afef guibg=NONE')
-                    vim.cmd('highlight DashboardShortCutCursor guifg=#61afef guibg=#3e4452')
-
                     local function update_shortcuts()
                         local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1
                         -- Clamp cursor
@@ -136,11 +140,11 @@ return {
                             vim.api.nvim_win_set_cursor(0, { max_line + 1, 0 })
                             cursor_line = max_line
                         end
-                        -- Update shortcut highlights (only for marks at shortcuts_line or after)
+                        -- Update shortcut highlights only on MRU file lines
                         for _, mark in ipairs(vim.api.nvim_buf_get_extmarks(bufnr, ns, 0, -1, { details = true })) do
                             local line = mark[2]
                             local details = mark[4]
-                            if details.virt_text and line >= shortcuts_line then
+                            if details.virt_text and line > shortcuts_line and line >= min_line and line <= max_line then
                                 local hl = line == cursor_line and 'DashboardShortCutCursor' or 'DashboardShortCut'
                                 vim.api.nvim_buf_set_extmark(bufnr, ns, line, mark[3], {
                                     id = mark[1],
@@ -159,6 +163,27 @@ return {
                         buffer = bufnr,
                         callback = update_shortcuts,
                     })
+
+                    -- Build list of MRU files matching cwd
+                    local cwd = vim.fn.getcwd()
+                    local mru_files = {}
+                    for _, file in ipairs(vim.v.oldfiles) do
+                        if file:find(cwd, 1, true) == 1 and vim.fn.filereadable(file) == 1 then
+                            table.insert(mru_files, file)
+                            if #mru_files >= 5 then break end
+                        end
+                    end
+
+                    -- Add Enter mapping to open MRU files
+                    vim.keymap.set('n', '<CR>', function()
+                        local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+                        if cursor_line >= min_line and cursor_line <= max_line then
+                            local idx = cursor_line - min_line + 1
+                            if mru_files[idx] then
+                                vim.cmd('edit ' .. vim.fn.fnameescape(mru_files[idx]))
+                            end
+                        end
+                    end, { buffer = bufnr, nowait = true, silent = true })
                 end, 50)
             end,
         })
@@ -167,7 +192,7 @@ return {
             pattern = '*',
             callback = function()
                 if vim.bo.filetype ~= 'dashboard' and vim.bo.filetype ~= 'neo-tree' then
-                    vim.cmd('highlight Cursor blend=0')
+                    require("config.cursor").show()
                 end
             end,
         })
